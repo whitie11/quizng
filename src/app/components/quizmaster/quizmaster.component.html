@@ -1,0 +1,83 @@
+<p>quizmaster works!</p>
+<br>
+
+
+ <div fxLayout="row">
+  <div fxFlex="20">Question No:{{question.ID}}</div>
+  <div fxFlex> {{question.text}}</div>
+</div>
+
+<div fxLayout="row" fxLayout.lt-sm="column">
+
+<div fxLayout="column" fxFlex="50">
+  <div fxLayout="row">
+  <div fxFlex="5">A: </div>
+  <div fxFlex>{{question.answerA}}</div>
+</div>
+<div fxLayout="row">
+  <div fxFlex="5">B: </div>
+  <div fxFlex class="blue">{{question.answerB}}</div>
+</div>
+</div>
+
+<div fxLayout="column" fxFlex="50">
+  <div fxLayout="row">
+  <div fxFlex="5">C:</div>
+  <div fxFlex class="green">{{question.answerC}}</div>
+</div>
+<div fxLayout="row">
+  <div fxFlex="5">D:</div>
+  <div fxFlex>{{question.answerD}}</div>
+</div>
+</div>
+
+</div>
+
+<button (click)="sendQuestion()">Send Question</button>
+
+
+<table>
+  <tr *ngFor="let ans of answersArray">
+    <td>{{ans.source}}</td>
+    <td>{{ans.question_no}}</td>
+    <td>{{ans.answer}}</td>
+    <!-- <td>{{ans.timeSpent | date :'ss.sss' }}</td> -->
+    <td>{{ans.timeSpent }} secs</td>
+  </tr>
+
+</table>
+
+<table>
+  <tr *ngFor="let player of players">
+    <td>{{player.username}}</td>
+    <td>{{player.channel_name}}</td>
+    <td>{{player.quiz_group_name}}</td>
+  </tr>
+
+</table>
+
+<!-- <div class="row">
+  <div class="column">
+    <textarea [(ngModel)]="content" name="contentInput" cols="40" rows="5"></textarea>
+    <br>
+    <button (click)="sendMsg()">Send Message</button>
+  </div>
+
+</div>
+<br>
+<div>
+  <h1>Sent Messages</h1>
+  <br>
+  <ul>
+    <li *ngFor="let item of sent">Source: {{item.source}} -> Content {{item.content}}</li>
+  </ul>
+</div>
+
+<br>
+<div>
+  <h1>Received Messages</h1>
+  <br>
+  <ul>
+    <li *ngFor="let item of received">Source: {{item.source}} -> Content {{item.content}}</li>
+  </ul>
+</div> -->

@@ -1,0 +1,21 @@
+/* .box {
+  color:rgb(214, 141, 141);
+  padding:10px;
+  text-align:center;
+  border-style: inset;
+} */
+
+.container {
+  min-height: 100%;
+  width: 100%;
+}
+
+.disabledQuestion{
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.question {
+  border-style: solid;
+}
+

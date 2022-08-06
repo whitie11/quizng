@@ -1,0 +1,30 @@
+.logo
+{
+  color: white;
+  text-decoration: none;
+
+
+
+}
+.whiteTxt {
+  background-color: black;
+  color: white;
+  border-style: solid;
+  border-color: black;
+
+}
+.blackTxt {
+  background-color: white;
+  color: black;
+  border-style: solid;
+  border-color: white;
+  border-left: black;
+   padding-left: 2px;
+}
+
+.container {
+display: flex;
+place-content: space-between;
+}
+
+

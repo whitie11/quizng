@@ -1,0 +1,76 @@
+<h1>Angular + WebSockets</h1>
+<div>Connection Status: {{ isConnected$ | async }}</div>
+<span *ngIf="!isActiveQuestion"> waiting for question</span>
+<span *ngIf="isActiveQuestion">
+  <div [ngClass]="{ disabledQuestion: !isActiveQuestion }">
+    <div fxLayout="row" class="q">
+      <div fxFlex="20">Question No:{{ question.ID }}</div>
+      <div fxFlex>{{ question.text }}</div>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-sm="column">
+      <div fxLayout="column" fxFlex="50">
+        <div fxLayout="row" (click)="sendAnswer(question.ID, 'A')">
+          <div fxFlex="5">A:</div>
+          <div fxFlex>{{ question.answerA }}</div>
+        </div>
+        <div fxLayout="row" (click)="sendAnswer(question.ID, 'B')">
+          <div fxFlex="5">B:</div>
+          <div fxFlex>{{ question.answerB }}</div>
+        </div>
+      </div>
+
+      <div fxLayout="column" fxFlex="50">
+        <div fxLayout="row" (click)="sendAnswer(question.ID, 'C')">
+          <div fxFlex="5">C:</div>
+          <div fxFlex>{{ question.answerC }}</div>
+        </div>
+        <div fxLayout="row" (click)="sendAnswer(question.ID, 'D')">
+          <div fxFlex="5">D:</div>
+          <div fxFlex>{{ question.answerD }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div fxLayout="row">
+    <mat-progress-bar
+      mode="determinate"
+      value="{{ sliderValue}}"
+    ></mat-progress-bar>
+  </div>
+</span>
+<br />
+<div class="row">
+  <div class="column">
+    <textarea
+      [(ngModel)]="content"
+      name="contentInput"
+      cols="40"
+      rows="5"
+    ></textarea>
+    <br />
+    <button (click)="sendMsg()">Send Message</button>
+  </div>
+</div>
+<br />
+<div>
+  <h1>Sent Messages</h1>
+  <br />
+  <ul>
+    <li *ngFor="let item of sent">
+      Source: {{ item.source }} -> Content {{ item.content }}
+    </li>
+  </ul>
+</div>
+
+<br />
+<div>
+  <h1>Received Messages</h1>
+  <br />
+  <ul>
+    <li *ngFor="let item of received">
+      Source: {{ item.source }} -> Content {{ item.content }}
+    </li>
+  </ul>
+</div>
