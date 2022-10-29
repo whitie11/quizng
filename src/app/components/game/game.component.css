@@ -6,11 +6,48 @@
 } */
 
 .container {
-  min-height: 100%;
-  width: 100%;
+  padding: 15px;
+  background-color: #c8e6f9;
 }
 
-.disabledQuestion{
+.padding1 {
+  padding: 8px;
+}
+
+.background {
+  background-color: cyan;
+}
+
+.color1 {
+  background-color: rgb(249, 199, 199);
+}
+
+.color2 {
+  background-color: rgb(255, 255, 217);
+}
+
+.color3 {
+  background-color: rgb(207, 249, 193);
+}
+
+.color4 {
+  background-color: rgb(156, 247, 238);
+}
+
+::ng-deep .mat-progress-bar {
+  padding-top: 10px;
+  height: 10px !important;
+}
+
+::ng-deep .green-progress .mat-progress-bar-fill::after {
+  background-color: "primary" !important;
+}
+
+::ng-deep .red-progress .mat-progress-bar-fill::after {
+  background-color: red !important;
+}
+
+/* .disabledQuestion{
   pointer-events: none;
   opacity: 0.5;
 }
@@ -19,3 +56,20 @@
   border-style: solid;
 }
 
+
+
+.width90 {
+  width: 100%;
+  background-color: goldenrod;
+}
+
+td , th {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
+} */
+
+.spacer {
+  padding-top: 10px;
+  background-color: rgb(255, 98, 0);
+}

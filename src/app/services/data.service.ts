@@ -27,21 +27,20 @@ import { timerData } from '../_models/timer';
 // import { json } from 'stream/consumers';
 // import { JsonPipe } from '@angular/common';
 
-export const WS_ENDPOINT = 'ws://127.0.0.1:8000/quiz/';
-export const ANS_ENDPOINT = 'ws://127.0.0.1:8000/quizmaster/';
 export const RECONNECT_INTERVAL = 2000;
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService implements OnInit {
+  WS_ENDPOINT = environment.WS_ENDPOINT;
+  ANS_ENDPOINT = environment.ANS_ENDPOINT;
+
   private socket$?: WebSocketSubject<any>;
   isConnectedSubject = new BehaviorSubject<Boolean>(false);
 
   private ansSocket$?: WebSocketSubject<any>;
   isConnectedAnsSubject = new BehaviorSubject<Boolean>(false);
-
-
 
   isLoggedIn?: isLoggedIn;
   isLoggedIn$?: Observable<isLoggedIn>;
@@ -78,7 +77,9 @@ export class DataService implements OnInit {
     })
   );
 
-  private playerSubject$ = new BehaviorSubject<Observable<PlayerChannel[]>>(EMPTY);
+  private playerSubject$ = new BehaviorSubject<Observable<PlayerChannel[]>>(
+    EMPTY
+  );
   public playerList$ = this.playerSubject$.pipe(
     switchAll(),
     catchError((e) => {
@@ -93,6 +94,7 @@ export class DataService implements OnInit {
         state: d.state,
         username: d.username,
         userID: d.userID,
+        role: d.role,
       };
     });
   }
@@ -103,7 +105,9 @@ export class DataService implements OnInit {
    * Creates a new WebSocket subject and send it to the messages subject
    * @param cfg if true the observable will be retried.
    */
-  public connectPlayer(cfg: { reconnect: boolean } = { reconnect: false }): void {
+  public connectPlayer(
+    cfg: { reconnect: boolean } = { reconnect: false }
+  ): void {
     let lg = this.isLoggedIn?.username;
 
     if (!this.socket$ || this.socket$.closed) {
@@ -131,25 +135,34 @@ export class DataService implements OnInit {
           this.messagesSubject$.next(obs);
         } else if (msg.subject == 'answer') {
           console.log('new answer recieved');
-          let new_ans: Answer = <Answer>{};
-          new_ans.source = msg.source;
-          new_ans.answer = msg.answer;
-          new_ans.type = msg.type;
-          new_ans.subject = msg.subject;
-          new_ans.question_no = msg.question_no;
-          new_ans.timeSpent = msg.timeSpent;
+          let new_ans: Answer = {
+            source: msg.source,
+            userID: msg.userID,
+            answer: msg.answer,
+            type: msg.type,
+            subject: msg.subject,
+            question_ID: msg.question_ID,
+            question_num: msg.question_num,
+            timeSpent: msg.timeSpent,
+          };
           let obs = new BehaviorSubject<Answer>(new_ans);
           this.answerSubject$.next(obs);
         } else if (msg.subject == 'question') {
           console.log('new question recieved???????');
-          let new_question: Question = <Question>{};
-          new_question.ID = msg.ID;
-          new_question.text = msg.text;
-          new_question.answerA = msg.answerA;
-          new_question.answerB = msg.answerB;
-          new_question.answerC = msg.answerC;
-          new_question.answerD = msg.answerD;
-          new_question.time = msg.time;
+          const new_question: Question = {
+            ID: msg.ID,
+            group: msg.group,
+            question_num: msg.question_num,
+            text: msg.text,
+            answerA: msg.answerA,
+            answerB: msg.answerB,
+            answerC: msg.answerC,
+            answerD: msg.answerD,
+            subject: 'question',
+            type: 'question',
+            duration: msg.duration,
+            startTime: msg.startTime,
+          };
           let obs = new BehaviorSubject<Question>(new_question);
           this.questionSubject$.next(obs);
         } else if (msg.subject == 'timer') {
@@ -188,18 +201,19 @@ export class DataService implements OnInit {
       res.subscribe((data) => {
         console.log('Message type: ' + data.type);
         if (data.type == 'answer') {
-          let new_ans: Answer = <Answer>{};
-          new_ans.source = data.source;
-          new_ans.answer = data.answer;
-          new_ans.type = data.type;
-          new_ans.subject = data.subject;
-          new_ans.question_no = data.question_no;
-          new_ans.timeSpent = data.timeSpent;
+          let new_ans: Answer = {
+            source: data.source,
+            userID: data.userID,
+            answer: data.answer,
+            type: data.type,
+            subject: data.subject,
+            question_ID: data.question_ID,
+            question_num: data.question_num,
+            timeSpent: data.timeSpent,
+          };
           let obs = new BehaviorSubject<Answer>(new_ans);
           this.answerSubject$.next(obs);
-        }
-        else if (data.type == 'playersList') {
-
+        } else if (data.type == 'playersList') {
           let pl: PlayerChannel[] = [];
           // let d = data.playersList;
           // let st = JSON.parse(d);
@@ -207,8 +221,8 @@ export class DataService implements OnInit {
           //   pl.push(p);
           // }
           pl = JSON.parse(data.playersList);
-          let obs= new BehaviorSubject<PlayerChannel[]>(pl);
-          this.playerSubject$.next(obs)
+          let obs = new BehaviorSubject<PlayerChannel[]>(pl);
+          this.playerSubject$.next(obs);
         }
       });
     }
@@ -250,12 +264,26 @@ export class DataService implements OnInit {
   }
 
   sendMessage(msg: any) {
+    console.log('sending message!!!:' + msg.content);
     if (this.socket$) {
       this.socket$.next(msg);
     }
   }
 
-  sendQuestion(question: any) {
+  sendAnsMessage(msg: any) {
+    console.log('sending Answer!!!:' + msg.content);
+    if (this.ansSocket$) {
+      this.ansSocket$.next(msg);
+    }
+  }
+
+  sendIndMessage(msg: any) {
+    if (this.ansSocket$) {
+      this.ansSocket$.next(msg);
+    }
+  }
+
+  sendQuestion(question: Question) {
     if (this.ansSocket$) {
       this.ansSocket$.next(question);
     }
@@ -280,15 +308,19 @@ export class DataService implements OnInit {
     let username = this.isLoggedIn?.username
       ? this.isLoggedIn.username
       : 'Anonymous';
-
+    let userID = this.isLoggedIn?.userID
+      ? this.isLoggedIn.userID
+      : 0;
     // ?quiz_name=lobby&token=test_token&username=Fred
     const game_url =
-      WS_ENDPOINT +
+      this.WS_ENDPOINT +
       '?room_name=lobby' +
       '&token=' +
       'testToken' +
       '&username=' +
-      username;
+      username +
+      '&userID=' +
+      userID;
 
     return webSocket({
       url: game_url,
@@ -315,7 +347,7 @@ export class DataService implements OnInit {
       : 'Anonymous';
 
     const ans_url =
-      ANS_ENDPOINT +
+      this.ANS_ENDPOINT +
       '?room_name=lobby1' +
       '&token=' +
       'testToken' +

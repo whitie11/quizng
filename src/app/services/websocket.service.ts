@@ -7,16 +7,19 @@ import { isLoggedIn } from '../_models/isLoggedIn';
 import { Question } from '../_models/question';
 import { AuthService } from './auth.service';
 
-const CHAT_URL =
-  'ws://127.0.0.1:8000/quiz/?quiz_name=lobby&token=test_token&username=Fred';
-const QM_URL =
-  'ws://127.0.0.1:8000/quizmaster/?quiz_name=quiz1&token=test_token&username=QM';
+import { environment } from '../../environments/environment';
+import { Message } from '../_models/message';
 
-export interface Message {
-  source: string;
-  content: string;
-  type: string;
-}
+// const CHAT_URL =
+//   'ws://127.0.0.1:8000/quiz/?quiz_name=lobby&token=test_token&username=Fred';
+// const QM_URL =
+//   'ws://127.0.0.1:8000/quizmaster/?quiz_name=quiz1&token=test_token&username=QM';
+
+// export interface Message {
+//   source: string;
+//   content: string;
+//   type: string;
+// }
 
 export interface Answer {
   source: any;
@@ -49,12 +52,13 @@ export class WebsocketService {
         state: d.state,
         username: d.username,
         userID: d.userID,
+        role: d.role,
       };
     });
 
     const username = this.isLoggedIn?.username ? this.isLoggedIn?.username : 'Fred';
     const QP_URL =
-    'ws://127.0.0.1:8000/quiz/?quiz_name=lobby&token=test_token&username='+ username;
+    environment.WS_ENDPOINT+ "/?quiz_name=lobby&token=test_token&username='+ username";
 
     this.messages = <Subject<Message>>this.connect(QP_URL).pipe(
       map((response: MessageEvent): Message => {

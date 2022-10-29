@@ -10,10 +10,7 @@
       <span class="nav-links" *ngIf="isLoggedIn?.state">
         <a mat-button [routerLink]="'/game'"> Play Game </a>
         <a mat-button [routerLink]="'/quizmaster'"> Quizmaster </a>
-        <!-- <a mat-button [routerLink]="'/stats'"> Statistics </a>
-        <a mat-button [routerLink]="'/stats'"> Leader Board </a>
-        <a mat-button [routerLink]="'/test'"> Test </a>
-        <a mat-button [matMenuTriggerFor]="account">My Account</a> -->
+        <a mat-button [routerLink]="'/config'">Config</a>
       </span>
       <span class="menu-spacer"></span>
       <span class="nav-access">
@@ -43,10 +40,7 @@
       <span *ngIf="isLoggedIn?.state">
         <button mat-menu-item [routerLink]="'/game'">Play Game</button>
         <button mat-menu-item [routerLink]="'/quizmaster'">Quizmaster</button>
-        <!-- <button mat-menu-item [routerLink]="'/stats'">Statistics</button>
-        <button mat-menu-item [routerLink]="'/stats'">Leader Board</button>
-        <button mat-menu-item [matMenuTriggerFor]="account">My Account</button>
-        <button mat-menu-item [routerLink]="'/test'">Test</button>-->
+        <button mat-menu-item [routerLink]="'/config'">Config</button>
         <button mat-menu-item [routerLink]="'/about'">About</button>
         <button mat-menu-item [routerLink]="'/logout'">Logout</button>
       </span>

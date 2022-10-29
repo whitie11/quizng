@@ -1,0 +1,149 @@
+<div class="container" fxlayout="row" >
+  <div fxlayout="row" >
+    <div fxflex fxLayoutAlign="center center">
+      Question Group:
+      <mat-form-field appearance="fill">
+        <mat-label>Select an option</mat-label>
+        <mat-select
+          [(value)]="selected"
+          (selectionChange)="getQuestionList($event.value)"
+        >
+          <mat-option *ngFor="let g of qgl" [value]="g.group">
+            {{ g.group }}:({{ g.count }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<!-- <p>You selected: {{selected}}</p> -->
+<div class="container">
+  <table
+    fxFlexFill
+    mat-table
+    [dataSource]="dataSource"
+    class="mat-elevation-z8"
+  >
+    <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="question_num">
+      <th mat-header-cell *matHeaderCellDef>Number</th>
+      <td mat-cell *matCellDef="let question">{{ question.question_num }}</td>
+    </ng-container>
+
+    <!-- Text Column -->
+    <ng-container matColumnDef="text">
+      <th mat-header-cell *matHeaderCellDef>Text</th>
+      <td mat-cell *matCellDef="let question">{{ question.text }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="answerA">
+      <th mat-header-cell *matHeaderCellDef>answer A</th>
+      <td mat-cell *matCellDef="let question">{{ question.answerA }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="answerB">
+      <th mat-header-cell *matHeaderCellDef>answer B</th>
+      <td mat-cell *matCellDef="let question">{{ question.answerB }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="answerC">
+      <th mat-header-cell *matHeaderCellDef>answer C</th>
+      <td mat-cell *matCellDef="let question">{{ question.answerC }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="answerD">
+      <th mat-header-cell *matHeaderCellDef>answer D</th>
+      <td mat-cell *matCellDef="let question">{{ question.answerD }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef>Duration</th>
+      <td mat-cell *matCellDef="let question">{{ question.duration }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="correctAns">
+      <th mat-header-cell *matHeaderCellDef>correct Ans</th>
+      <td mat-cell *matCellDef="let question">{{ question.correctAns }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      (click)="clickedRow(row)"
+      *matRowDef="let row; columns: displayedColumns"
+    ></tr>
+  </table>
+
+  <mat-paginator
+    [pageSizeOptions]="[3, 10, 25, 100]"
+    aria-label="Select page of users"
+  ></mat-paginator>
+</div>
+
+<div class="container" fxLayout="column" fxLayoutGap="5px">
+  <div fxLayout="row"  >
+    <div fxFlex="3" fxLayoutAlign="center center">{{question.question_num}}</div>
+      <textarea  fxFlex fxLayout="wrap" [(ngModel)]="question.text" ></textarea>
+  </div>
+
+  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="5px">
+    <div fxLayout="column" fxFlex="50" fxLayoutGap="5px">
+
+      <div fxLayout="row">
+        <div fxFlex="5" fxLayoutAlign="center center">A:</div>
+          <input fxFlex [(ngModel)]="question.answerA" />
+      </div>
+      <div fxLayout="row">
+        <div fxFlex="5" fxLayoutAlign="center center">B:</div>
+          <input fxFlex [(ngModel)]="question.answerB" />
+      </div>
+    </div>
+
+    <div fxLayout="column" fxFlex="50" fxLayoutGap="5px">
+      <div fxLayout="row">
+        <div fxFlex="5" fxLayoutAlign="center center">C:</div>
+       <input fxFlex [(ngModel)]="question.answerC" />
+      </div>
+      <div fxLayout="row">
+        <div fxFlex="5" fxLayoutAlign="center center">D:</div>
+        <input fxFlex [(ngModel)]="question.answerD" />
+      </div>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10" fxLayout.lt-sm="column">
+
+    <div fxLayout="column"  fxFlex="initial" >
+      <div fxLayout="row">
+        Correct Answer: <input fxFlex="20px" [(ngModel)]="question.correctAns" />
+      </div>
+    </div>
+
+    <div fxLayout="column" fxFlex="initial"  >
+      <div fxLayout="row" >
+        Duration:
+        <input fxFlex="30px" [(ngModel)]="question.duration" />
+      </div>
+    </div>
+
+    <div fxLayout="column" fxFlex="initial"  >
+      <div fxLayout="row">
+        Question Group:
+        <input fxFlex="initial" [(ngModel)]="question.group" />
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="5px">
+
+  <button  class="flex-item" (click)="resetQuestion()">Clear</button>
+  <button fxFlexOffset="20px"  class="flex-item" (click)="saveAsEditQuestion()">Save Edited Quesion</button>
+  <button   class="flex-item" (click)="saveAsNewQuestion()">Save As New Quesion</button>
+</div>

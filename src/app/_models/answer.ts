@@ -1,6 +1,8 @@
 export interface Answer {
   source: string;
-  question_no: number;
+  userID: number;
+  question_ID: number;
+  question_num: number;
   answer: string;
   type: string;
   subject: string;

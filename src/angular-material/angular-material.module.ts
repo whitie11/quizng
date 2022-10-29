@@ -11,12 +11,14 @@ import { MatInputModule } from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSelectModule} from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table'
 
-import {FlexModule } from '@angular/flex-layout';
+import {FlexLayoutModule } from '@angular/flex-layout';
 
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 const materialModules = [
   MatIconModule,
@@ -31,10 +33,13 @@ const materialModules = [
   MatProgressBarModule,
   MatSelectModule,
   MatGridListModule,
+  MatTableModule,
+  MatPaginatorModule,
 
   MatRadioModule,
   MatCheckboxModule,
-  FlexModule,
+  FlexLayoutModule,
+  
 ];
 
 @NgModule({

@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { Router } from '@angular/router';
 import { JWTPayload } from '../_models/JWTPayload';
 import { RegisterDTO } from '../_models/registerDTO';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -17,13 +18,14 @@ export class AuthService {
   loggedOutState: isLoggedIn = {
     state: false,
     username: 'Please Login',
-    userID: 0
+    userID: 0,
+    role: '',
   };
 
   isLoginSubject = new BehaviorSubject<isLoggedIn>(this.loggedOutState);
 
-  // apiRoot = 'http://wingoserver.duckdns.org/';
-  apiRoot = 'http://localhost:8000/';
+  // apiRoot = 'http://quizicalserver.duckdns.org/';
+  apiRoot = environment.apiRoot;
   constructor(
     private http: HttpClient,
     private tokenService: TokenStorageService,
@@ -68,7 +70,8 @@ export class AuthService {
     const newloginState: isLoggedIn = {
       state: true,
       username: username,
-      userID: userID
+      userID: userID,
+      role: payload.role
     };
     this.tokenService.saveTokens(res);
     this.tokenService.saveUser(username);
@@ -133,13 +136,15 @@ export class AuthService {
     const x = moment().isBefore(this.getExpiration());
     const y = this.tokenService.getAccessToken();
     const user = this.tokenService.getUser();
+    const role = this.tokenService.getRole();
     const userID = this.tokenService.getUserID();
 
     if (x && y && user) {
       const newloginState: isLoggedIn = {
         state: true,
         username: user,
-        userID: userID
+        userID: userID,
+        role: role,
       };
       this.isLoginSubject.next(newloginState);
 

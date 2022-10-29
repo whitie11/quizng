@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { map } from 'rxjs/operators';
 import { WebsocketService } from "./websocket.service";
+import { environment } from '../../environments/environment';
 
-let CHAT_URL = "ws://127.0.0.1:8000/chat/?room_name=lobby1&token=test_token";
-
+let CHAT_URL = environment.CHAT_URL_ROOT + "/chat/?room_name=lobby1&token=test_token";
 
 export interface Message {
   author: string;

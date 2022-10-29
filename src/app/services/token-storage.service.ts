@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 const ACCESS_TOKEN_KEY = 'access-token';
 const REFRESH_TOKEN_KEY = 'refresh-token';
 const USER_KEY = 'auth-user';
+const USER_ROLE_KEY = 'auth-user-role';
 const USER_ID_KEY = 'auth-user-id';
 const EXPIRES_AT = 'expires-at';
 
@@ -30,11 +31,13 @@ export class TokenStorageService {
     window.sessionStorage.removeItem(REFRESH_TOKEN_KEY);
     window.sessionStorage.removeItem(EXPIRES_AT);
     window.sessionStorage.removeItem(USER_ID_KEY);
+    window.sessionStorage.removeItem(USER_ROLE_KEY);
 
     window.sessionStorage.setItem(ACCESS_TOKEN_KEY, token.access);
     window.sessionStorage.setItem(REFRESH_TOKEN_KEY, token.refresh);
     window.sessionStorage.setItem(EXPIRES_AT, JSON.stringify(expiresAt.valueOf()));
     window.sessionStorage.setItem(USER_ID_KEY, payload.user_id.toString());
+    window.sessionStorage.setItem(USER_ROLE_KEY, payload.role);
   }
 
 public saveRefreshedAccessToken(token: any) {
@@ -71,6 +74,12 @@ public saveRefreshedAccessToken(token: any) {
   public getUser(): string {
     if (window.sessionStorage.getItem(USER_KEY)) {
       return window.sessionStorage.getItem(USER_KEY)!;
+    } else return '';
+  }
+
+  public getRole(): string {
+    if (window.sessionStorage.getItem(USER_ROLE_KEY)) {
+      return window.sessionStorage.getItem(USER_ROLE_KEY)!;
     } else return '';
   }
 

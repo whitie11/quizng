@@ -23,7 +23,8 @@ this.isLoggedIn$.subscribe((d) => {
       this.isLoggedIn = {
         state: d.state,
         username: d.username,
-        userID: d.userID
+        userID: d.userID,
+        role: d.role
       };
     });
   }

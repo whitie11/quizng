@@ -1,83 +1,139 @@
-<p>quizmaster works!</p>
-<br>
+<div class="container">
+  <h1 fxflex fxLayoutAlign="center center">Question Master</h1>
 
+  <div fxLayout="row" fxLayoutGap="20px">
 
- <div fxLayout="row">
-  <div fxFlex="20">Question No:{{question.ID}}</div>
-  <div fxFlex> {{question.text}}</div>
-</div>
+    <div fxFlex class="myLabel">
+      Connected Players
+      <table>
+        <tr *ngFor="let player of players">
+          <td>{{ player.username }}</td>
+          <td>{{ player.userID }}</td>
+          <!-- <td>{{ player.channel_name }}</td>
+      <td>{{ player.quiz_group_name }}</td> -->
+        </tr>
+      </table>
+    </div>
 
-<div fxLayout="row" fxLayout.lt-sm="column">
-
-<div fxLayout="column" fxFlex="50">
-  <div fxLayout="row">
-  <div fxFlex="5">A: </div>
-  <div fxFlex>{{question.answerA}}</div>
-</div>
-<div fxLayout="row">
-  <div fxFlex="5">B: </div>
-  <div fxFlex class="blue">{{question.answerB}}</div>
-</div>
-</div>
-
-<div fxLayout="column" fxFlex="50">
-  <div fxLayout="row">
-  <div fxFlex="5">C:</div>
-  <div fxFlex class="green">{{question.answerC}}</div>
-</div>
-<div fxLayout="row">
-  <div fxFlex="5">D:</div>
-  <div fxFlex>{{question.answerD}}</div>
-</div>
-</div>
-
-</div>
-
-<button (click)="sendQuestion()">Send Question</button>
-
-
-<table>
-  <tr *ngFor="let ans of answersArray">
-    <td>{{ans.source}}</td>
-    <td>{{ans.question_no}}</td>
-    <td>{{ans.answer}}</td>
-    <!-- <td>{{ans.timeSpent | date :'ss.sss' }}</td> -->
-    <td>{{ans.timeSpent }} secs</td>
-  </tr>
-
-</table>
-
-<table>
-  <tr *ngFor="let player of players">
-    <td>{{player.username}}</td>
-    <td>{{player.channel_name}}</td>
-    <td>{{player.quiz_group_name}}</td>
-  </tr>
-
-</table>
-
-<!-- <div class="row">
-  <div class="column">
-    <textarea [(ngModel)]="content" name="contentInput" cols="40" rows="5"></textarea>
-    <br>
-    <button (click)="sendMsg()">Send Message</button>
+    <div fxFlex fxLayout="row">
+      <div fxflex fxLayoutAlign="center center">
+        Question Group:
+        <mat-form-field fxFlex>
+          <mat-label>Select an option</mat-label>
+          <mat-select
+            [(value)]="selected"
+            (selectionChange)="getQuestionList($event.value)"
+          >
+            <mat-option *ngFor="let g of qgl" [value]="g.group">
+              {{ g.group }}:({{ g.count }})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
   </div>
 
-</div>
-<br>
-<div>
-  <h1>Sent Messages</h1>
-  <br>
-  <ul>
-    <li *ngFor="let item of sent">Source: {{item.source}} -> Content {{item.content}}</li>
-  </ul>
-</div>
+  <div fxLaout="row">
+    <div fxFlex class="myLabel">
+      Leaderboard
+      <table>
+        <tr>
+          <td>Player</td>
+          <td>Score</td>
+          <td>Bonus</td>
+        </tr>
+        <tr *ngFor="let player of leaderBoard">
+          <td>{{ player.username }}</td>
+          <td>{{ player.score }}</td>
+          <td>{{ player.bonus }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
 
-<br>
-<div>
-  <h1>Received Messages</h1>
-  <br>
-  <ul>
-    <li *ngFor="let item of received">Source: {{item.source}} -> Content {{item.content}}</li>
-  </ul>
-</div> -->
+  <div class="spacer" fxLayout="row wrap">
+    <div *ngFor="let b of questionButtonArray">
+      <button
+        [ngClass]="{
+          but_class: b.status === 'clean',
+          but_class2: b.status === 'active',
+          but_class3: b.status === 'used'
+        }"
+        (click)="loadQuestion(b.index)"
+      >
+        {{ b.questionNum }}
+      </button>
+    </div>
+  </div>
+
+  <div class="spacer" fxLayout="row">
+    <div fxFlex="20">Question No:{{ question.question_num }}</div>
+    <div fxFlex>{{ question.text }}</div>
+  </div>
+
+  <div fxLayout="row" fxLayout.lt-sm="column">
+    <div fxLayout="column" fxFlex="50">
+      <div class="spacer" fxLayout="row">
+        <div fxFlex="5">A:</div>
+        <div fxFlex>{{ question.answerA }}</div>
+      </div>
+      <div class="spacer" fxLayout="row">
+        <div fxFlex="5">B:</div>
+        <div fxFlex class="blue">{{ question.answerB }}</div>
+      </div>
+    </div>
+
+    <div fxLayout="column" fxFlex="50">
+      <div class="spacer" fxLayout="row">
+        <div fxFlex="5">C:</div>
+        <div fxFlex class="green">{{ question.answerC }}</div>
+      </div>
+      <div class="spacer" fxLayout="row">
+        <div fxFlex="5">D:</div>
+        <div fxFlex>{{ question.answerD }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer" fxLayout="row">
+    <div fxFlex="25">Correct Answer:</div>
+    <div fxFlex>{{ correctAnswer }}</div>
+  </div>
+
+  <!-- <button (click)="loadQuestion()">Next Question</button> -->
+
+  <span fxLayoutAlign="end" *ngIf="checkStatus()">
+    <button (click)="sendQuestion()">Send Question</button>
+  </span>
+
+  <div fxLayout="row" fxFill>
+    <mat-progress-bar
+      mode="determinate"
+      value="{{ sliderValue }}"
+    ></mat-progress-bar>
+  </div>
+
+  <table>
+    <tr>
+      <th>Player</th>
+      <th>userID</th>
+      <th>Question No.</th>
+      <th>Ref</th>
+      <th>Answer</th>
+      <th>Time</th>
+    </tr>
+    <tr *ngFor="let ans of answersArray">
+      <td>{{ ans.source }}</td>
+      <td>{{ ans.userID }}</td>
+      <td>{{ ans.question_num }}</td>
+      <td>{{ ans.question_ID }}</td>
+      <td>{{ ans.answer }}</td>
+      <!-- <td>{{ans.timeSpent | date :'ss.sss' }}</td> -->
+      <td>{{ ans.timeSpent }} secs</td>
+    </tr>
+  </table>
+
+  <span fxLayoutAlign="end">
+    <button (click)="sendTestMsg()">Send Msg</button>
+  </span>
+</div>

@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiRoot: 'http://localhost:8000/',
+  CHAT_URL_ROOT: "ws://127.0.0.1:8000/",
+  WS_ENDPOINT: 'ws://127.0.0.1:8000/ws/quiz/',
+  ANS_ENDPOINT: 'ws://127.0.0.1:8000/ws/quizmaster/'
 };
 
 /*

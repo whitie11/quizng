@@ -4,4 +4,5 @@ export interface JWTPayload {
   iat: number;
   jti: string;
   user_id: number;
+  role: string;
 }

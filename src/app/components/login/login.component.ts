@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/game']);
         },
         error: (e) => {
-          console.error('login error =>' + JSON.stringify(e.error.detail));
+          console.error('login error =>' + JSON.stringify(e.error.detail + e));
           this.errorMsg = 'Account not found: Try again!';
         },
         complete: () => console.info('complete')

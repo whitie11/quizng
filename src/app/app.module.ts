@@ -18,6 +18,10 @@ import { AuthGuard } from './services/auth-guard.service';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { QuizmasterComponent } from './components/quizmaster/quizmaster.component';
+import { QuizConfigComponent } from './components/quiz-config/quiz-config.component';
+import { AuthInterceptor } from './services/auth-interceptor.service';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { UnauthorisedDialogComponent } from './components/dialogs/unauthorised-dialog/unauthorised-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +33,8 @@ import { QuizmasterComponent } from './components/quizmaster/quizmaster.componen
     SettingsComponent,
     GameComponent,
     QuizmasterComponent,
+    QuizConfigComponent,
+    UnauthorisedDialogComponent,
 
   ],
 
@@ -44,7 +50,15 @@ import { QuizmasterComponent } from './components/quizmaster/quizmaster.componen
   ],
 
   providers: [
-    AuthGuard,
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'en-GB',
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent]
 })

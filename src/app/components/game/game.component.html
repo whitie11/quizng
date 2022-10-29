@@ -1,76 +1,91 @@
-<h1>Angular + WebSockets</h1>
-<div>Connection Status: {{ isConnected$ | async }}</div>
-<span *ngIf="!isActiveQuestion"> waiting for question</span>
-<span *ngIf="isActiveQuestion">
-  <div [ngClass]="{ disabledQuestion: !isActiveQuestion }">
-    <div fxLayout="row" class="q">
-      <div fxFlex="20">Question No:{{ question.ID }}</div>
-      <div fxFlex>{{ question.text }}</div>
+<div class="container" fxFlex="100" fxLayout="column">
+  <h1 fxLayoutAlign="center center" fxFlex>QuizTime</h1>
+
+  <div fxFlex fxLayoutAlign="center center">
+    Connection Status: {{ isConnected$ | async }}
+  </div>
+
+  <div
+    fxFlex
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    *ngIf="!isActiveQuestion"
+  >
+    <img fxFlex src="/assets/images/question.jpeg" alt="Waiting for question" />
+    <h3 fxFlex>Waiting for a question.......</h3>
+  </div>
+
+  <div fxflex *ngIf="isActiveQuestion">
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <div class="padding1" fxFlex="18">
+        Question No:{{ question.question_num }}
+      </div>
+      <div class="padding1" fxFlex>{{ question.text }}</div>
     </div>
 
     <div fxLayout="row" fxLayout.lt-sm="column">
       <div fxLayout="column" fxFlex="50">
-        <div fxLayout="row" (click)="sendAnswer(question.ID, 'A')">
-          <div fxFlex="5">A:</div>
-          <div fxFlex>{{ question.answerA }}</div>
+        <div
+          class="color1"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          (click)="sendAnswer(question.ID, question.question_num, 'A')"
+        >
+          <div class="padding1" fxFlex="5">A:</div>
+          <div class="padding1" fxFlex>{{ question.answerA }}</div>
         </div>
-        <div fxLayout="row" (click)="sendAnswer(question.ID, 'B')">
-          <div fxFlex="5">B:</div>
-          <div fxFlex>{{ question.answerB }}</div>
+        <div
+          class="color2"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          (click)="sendAnswer(question.ID, question.question_num, 'B')"
+        >
+          <div class="padding1" fxFlex="5">B:</div>
+          <div class="padding1" fxFlex>{{ question.answerB }}</div>
         </div>
       </div>
 
       <div fxLayout="column" fxFlex="50">
-        <div fxLayout="row" (click)="sendAnswer(question.ID, 'C')">
-          <div fxFlex="5">C:</div>
-          <div fxFlex>{{ question.answerC }}</div>
+        <div
+          class="color3"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          (click)="sendAnswer(question.ID, question.question_num, 'C')"
+        >
+          <div class="padding1" fxFlex="5">C:</div>
+          <div class="padding1" fxFlex>{{ question.answerC }}</div>
         </div>
-        <div fxLayout="row" (click)="sendAnswer(question.ID, 'D')">
-          <div fxFlex="5">D:</div>
-          <div fxFlex>{{ question.answerD }}</div>
+        <div
+          class="color4"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          (click)="sendAnswer(question.ID, question.question_num, 'D')"
+        >
+          <div class="padding1" fxFlex="5">D:</div>
+          <div class="padding1" fxFlex>{{ question.answerD }}</div>
         </div>
       </div>
     </div>
+    
+   <div fxLayout="row" fxFill>
+      <mat-progress-bar
+        class="{{ sliderColorClass(sliderValue) }}"
+        mode="determinate"
+        value="{{ sliderValue }}"
+      ></mat-progress-bar>
+    </div>
+
+
   </div>
 
-  <div fxLayout="row">
-    <mat-progress-bar
-      mode="determinate"
-      value="{{ sliderValue}}"
-    ></mat-progress-bar>
-  </div>
-</span>
-<br />
-<div class="row">
-  <div class="column">
-    <textarea
-      [(ngModel)]="content"
-      name="contentInput"
-      cols="40"
-      rows="5"
-    ></textarea>
-    <br />
-    <button (click)="sendMsg()">Send Message</button>
-  </div>
-</div>
-<br />
-<div>
-  <h1>Sent Messages</h1>
-  <br />
-  <ul>
-    <li *ngFor="let item of sent">
-      Source: {{ item.source }} -> Content {{ item.content }}
-    </li>
-  </ul>
-</div>
 
-<br />
-<div>
-  <h1>Received Messages</h1>
-  <br />
-  <ul>
-    <li *ngFor="let item of received">
-      Source: {{ item.source }} -> Content {{ item.content }}
-    </li>
-  </ul>
+
+
+  <div>
+      <div *ngFor="let m of received">
+        {{m.content}}
+      </div>
+  </div>
+
+
 </div>

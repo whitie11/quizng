@@ -69,6 +69,7 @@ export class RegisterComponent implements OnInit {
       email: frm.controls['email'].value,
       password: frm.controls['password'].value,
       password2: frm.controls['password2'].value,
+      role: 'StdUser'
     };
 
     this.authService.register(regDTO).subscribe({
