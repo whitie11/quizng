@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, Observable, share, shareReplay, tap } from 'rxjs';
 import { isLoggedIn } from '../_models/isLoggedIn';
 import { TokenStorageService } from './token-storage.service';
 import jwt_decode from 'jwt-decode';
@@ -153,5 +153,10 @@ export class AuthService {
       this.isLoginSubject.next(this.loggedOutState);
       return this.loggedOutState;
     }
+  }
+
+  getActivePlayers() {
+    const url = this.apiRoot + 'myChannels/activePlayers/'
+    return this.http.get<any>(url).pipe(share());
   }
 }

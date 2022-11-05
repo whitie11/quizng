@@ -14,7 +14,7 @@ import { timerData } from 'src/app/_models/timer';
 import { Message } from 'src/app/_models/message';
 import { QuestionService } from 'src/app/services/question.service';
 import { NumberSymbol } from '@angular/common';
-import { LeaderBoard } from 'src/app/_models/leaderBoard';
+import { LeaderBoard, LeaderBoardDTO } from 'src/app/_models/leaderBoard';
 import { LeadingComment } from '@angular/compiler';
 // import { WebsocketService } from '../../services/websocket.service';
 
@@ -351,6 +351,7 @@ export class QuizmasterComponent implements OnInit, AfterViewInit, OnDestroy {
     message.subject = 'message';
     message.reciever = '';
     this.service.sendAnsMessage(message);
+    this.sendLeaderboard();
   }
 
   getQuestionList(group: string) {
@@ -385,5 +386,14 @@ export class QuizmasterComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sendIndMsg(player.channel_name, msg);
       });
     }
+  }
+
+  sendLeaderboard() {
+    const leaderboard: LeaderBoardDTO = {
+      leaderboard: this.leaderBoard,
+      subject: 'message',
+      type: 'leaderboard'
+    }
+    this.service.sendLeaderboard(leaderboard)
   }
 }

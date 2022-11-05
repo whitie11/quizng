@@ -4,3 +4,9 @@ export interface LeaderBoard {
     score: number;
     bonus: number;
   }
+
+export interface LeaderBoardDTO {
+  leaderboard: LeaderBoard[];
+  subject?: string;
+  type?: string;
+}

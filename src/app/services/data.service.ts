@@ -24,6 +24,7 @@ import { Answer } from '../_models/answer';
 import { PlayerChannel } from '../_models/playerChannel';
 import { Question } from '../_models/question';
 import { timerData } from '../_models/timer';
+import { LeaderBoard } from '../_models/leaderBoard';
 // import { json } from 'stream/consumers';
 // import { JsonPipe } from '@angular/common';
 
@@ -81,6 +82,16 @@ export class DataService implements OnInit {
     EMPTY
   );
   public playerList$ = this.playerSubject$.pipe(
+    switchAll(),
+    catchError((e) => {
+      throw e;
+    })
+  );
+
+  private leadersSubject$ = new BehaviorSubject<Observable<LeaderBoard[]>>(
+    EMPTY
+  );
+  public leadersList$ = this.leadersSubject$.pipe(
     switchAll(),
     catchError((e) => {
       throw e;
@@ -168,6 +179,12 @@ export class DataService implements OnInit {
         } else if (msg.subject == 'timer') {
           let obs = new BehaviorSubject<any>(msg.value);
           this.timerSubject$.next(obs);
+        }else if (msg.subject == 'leaderboard') {
+          let l: LeaderBoard[] = [];
+          let x = msg.leaderboard;
+ //         l = JSON.parse(msg.leaderboard);
+          let obs = new BehaviorSubject<LeaderBoard[]>(x);
+          this.leadersSubject$.next(obs);
         }
       });
     }
@@ -190,7 +207,7 @@ export class DataService implements OnInit {
     if (!this.ansSocket$ || this.ansSocket$.closed) {
       this.ansSocket$ = this.getNewAnsSocket();
       const res = this.ansSocket$.pipe(
-        cfg.reconnect ? this.reconnect : (o) => o,
+        cfg.reconnect ? this.reconnectAns : (o) => o,
         tap({
           error: (error) => console.log(error),
         }),
@@ -215,11 +232,6 @@ export class DataService implements OnInit {
           this.answerSubject$.next(obs);
         } else if (data.type == 'playersList') {
           let pl: PlayerChannel[] = [];
-          // let d = data.playersList;
-          // let st = JSON.parse(d);
-          // for(let p of st){
-          //   pl.push(p);
-          // }
           pl = JSON.parse(data.playersList);
           let obs = new BehaviorSubject<PlayerChannel[]>(pl);
           this.playerSubject$.next(obs);
@@ -278,6 +290,12 @@ export class DataService implements OnInit {
   }
 
   sendIndMessage(msg: any) {
+    if (this.ansSocket$) {
+      this.ansSocket$.next(msg);
+    }
+  }
+
+  sendLeaderboard(msg: any) {
     if (this.ansSocket$) {
       this.ansSocket$.next(msg);
     }

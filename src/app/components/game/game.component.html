@@ -5,11 +5,16 @@
     Connection Status: {{ isConnected$ | async }}
   </div>
 
+  <div fxFlex fxLayoutAlign="center center"
+  *ngIf="!isActiveQuestion && isWaitingForAnswer">
+    <h2>Waiting for others to answer!</h2>
+  </div>
+
   <div
     fxFlex
     fxLayout="column"
     fxLayoutAlign="center center"
-    *ngIf="!isActiveQuestion"
+    *ngIf="!isActiveQuestion && !isWaitingForAnswer"
   >
     <img fxFlex src="/assets/images/question.jpeg" alt="Waiting for question" />
     <h3 fxFlex>Waiting for a question.......</h3>
@@ -66,7 +71,7 @@
         </div>
       </div>
     </div>
-    
+
    <div fxLayout="row" fxFill>
       <mat-progress-bar
         class="{{ sliderColorClass(sliderValue) }}"
@@ -74,18 +79,35 @@
         value="{{ sliderValue }}"
       ></mat-progress-bar>
     </div>
-
-
   </div>
 
 
+  <div fxFlex>
+    <div *ngFor="let m of received">
+      {{m.content}}
+    </div>
+</div>
 
 
-  <div>
-      <div *ngFor="let m of received">
-        {{m.content}}
-      </div>
-  </div>
+
+    <div fxFlex="100" class="myLabel"  fxLayout="column">
+      <h2 fxFlex fxLayoutAlign="center center">Leaderboard</h2>
+      <table fxFlex>
+        <tr>
+          <td>Player</td>
+          <td>Score</td>
+          <td>Bonus</td>
+        </tr>
+        <tr *ngFor="let player of leaderBoard">
+          <td>{{ player.username }}</td>
+          <td>{{ player.score }}</td>
+          <td>{{ player.bonus }}</td>
+        </tr>
+      </table>
+ </div>
+
+
+
 
 
 </div>

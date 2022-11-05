@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 import { Answer } from 'src/app/_models/answer';
 import { isLoggedIn } from 'src/app/_models/isLoggedIn';
+import { LeaderBoard } from 'src/app/_models/leaderBoard';
 import { Message } from 'src/app/_models/message';
 import { Question } from 'src/app/_models/question';
 // import { WebsocketService } from '../../services/websocket.service';
@@ -40,6 +41,7 @@ export class GameComponent implements OnInit, OnDestroy {
   };
 
   isActiveQuestion = false;
+  isWaitingForAnswer = false;
 
   questionTimeLeft = 0;
   // timeLeft: any = 0;
@@ -52,6 +54,8 @@ export class GameComponent implements OnInit, OnDestroy {
   sliderValue = 0;
   ansTimer?: Subscription;
 
+  leaderBoard: LeaderBoard[] = [];
+
   constructor(private service: DataService, private authService: AuthService) {
     this.isLoggedIn$ = this.authService.isLoggedIn();
     this.service.connectPlayer();
@@ -61,6 +65,13 @@ export class GameComponent implements OnInit, OnDestroy {
       this.received.push(msg);
       console.log('msg from websocket: ' + msg);
     });
+
+    this.service.leadersList$.subscribe((msg) => {
+      this.leaderBoard = msg;
+      this.isWaitingForAnswer = false;
+    });
+
+
 
     this.service.question$.subscribe((question) => {
       console.log('Response from websocket: ' + question);
@@ -76,6 +87,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.questionTimeLeft = dif;
 
       this.startTimer();
+      this.isWaitingForAnswer = true;
     });
 
     this.isLoggedIn$.subscribe((d) => {
